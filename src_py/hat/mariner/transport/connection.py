@@ -5,11 +5,11 @@ from hat import aio
 from hat import json
 from hat.drivers import tcp
 
-from hat.event.mariner.transport import common
-from hat.event.mariner.transport import encoder
+from hat.mariner.transport import common
+from hat.mariner.transport import encoder
 
 
-class Transport(aio.Resource):
+class Connection(aio.Resource):
 
     def __init__(self, conn: tcp.Connection):
         self._conn = conn

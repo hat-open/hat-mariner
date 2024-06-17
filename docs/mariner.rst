@@ -341,14 +341,6 @@ Notable differences to Eventer communications are:
 * `ping_req`/`ping_res` messages are available.
 
 
-Implementation
---------------
-
-Documentation is available as part of generated API reference:
-
-    * `Python hat.event.mariner module <py_api/hat/mariner.html>`_
-
-
 JSON Schema definitions
 -----------------------
 

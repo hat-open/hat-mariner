@@ -8,3 +8,5 @@ Content
     :maxdepth: 1
 
     mariner
+    client
+    server
