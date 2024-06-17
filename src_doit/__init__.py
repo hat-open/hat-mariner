@@ -61,10 +61,10 @@ def task_docs():
     def build():
         build_sphinx(src_dir=docs_dir,
                      dst_dir=build_docs_dir,
-                     project='hat-event',
+                     project='hat-mariner',
                      extensions=['sphinxcontrib.programoutput'])
-        build_pdoc(module='hat.mariner',
-                   dst_dir=build_docs_dir / 'py_api')
+        # build_pdoc(module='hat.mariner',
+        #            dst_dir=build_docs_dir / 'py_api')
 
     return {'actions': [build],
             'task_dep': ['json_schema_repo']}

@@ -1,65 +1,267 @@
----
-"$schema": "http://json-schema.org/schema#"
-id: "hat-event://mariner.yaml#"
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "hat-mariner://mariner.yaml"
 title: Mariner communication messages
 oneOf:
-  - "$ref": "hat-event://mariner.yaml#/definitions/messages/ping"
-  - "$ref": "hat-event://mariner.yaml#/definitions/messages/pong"
-  - "$ref": "hat-event://mariner.yaml#/definitions/messages/init"
-  - "$ref": "hat-event://mariner.yaml#/definitions/messages/events"
-definitions:
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/init_req"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/init_res"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/status"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/events"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/register_req"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/register_res"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/query_req"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/query_res"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/ping_req"
+    - $ref: "hat-mariner://mariner.yaml#/$defs/messages/ping_res"
+$defs:
     messages:
-        ping:
+        init_req:
             type: object
             required:
-                - type
-            properties:
-                type:
-                    const: ping
-        pong:
-            type: object
-            required:
-                - type
-            properties:
-                type:
-                    const: pong
-        init:
-            type: object
-            required:
-                - type
-                - client_id
+                - msg_type
+                - client_name
                 - client_token
-                - last_event_id
                 - subscriptions
+                - server_id
+                - persisted
             properties:
-                type:
-                    const: init
-                client_id:
+                msg_type:
+                    const: init_req
+                client_name:
                     type: string
                 client_token:
                     type:
                         - string
                         - "null"
-                last_event_id:
-                    oneOf:
-                        - type: "null"
-                        - "$ref": "hat-event://mariner.yaml#/definitions/event_id"
                 subscriptions:
                     type: array
                     items:
-                        "$ref": "hat-event://mariner.yaml#/definitions/event_type"
+                        $ref: "hat-mariner://mariner.yaml#/$defs/event_type"
+                server_id:
+                    type:
+                        - integer
+                        - "null"
+                persisted:
+                    type: boolean
+        init_res:
+            oneOf:
+              - type: object
+                required:
+                    - msg_type
+                    - success
+                    - status
+                properties:
+                    msg_type:
+                        const: init_res
+                    success:
+                        const: true
+                    status:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/status"
+              - type: object
+                required:
+                    - msg_type
+                    - success
+                    - status
+                properties:
+                    msg_type:
+                        const: init_res
+                    success:
+                        const: false
+                    error:
+                        type: string
+        status:
+            type: object
+            required:
+                - msg_type
+                - status
+            properties:
+                msg_type:
+                    const: status
+                status:
+                    $ref: "hat-mariner://mariner.yaml#/$defs/status"
         events:
             type: object
             required:
-                - type
+                - msg_type
                 - events
             properties:
-                type:
+                msg_type:
                     const: events
                 events:
                     type: array
                     items:
-                        "$ref": "hat-event://mariner.yaml#/definitions/event"
+                        $ref: "hat-mariner://mariner.yaml#/$defs/event"
+        register_req:
+            type: object
+            required:
+                - msg_type
+                - register_id
+                - register_events
+            properties:
+                msg_type:
+                    const: register_req
+                register_id:
+                    type: integer
+                register_events:
+                    type: array
+                    items:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/register_event"
+        register_res:
+            oneOf:
+              - type: object
+                required:
+                    - msg_type
+                    - register_id
+                    - success
+                    - events
+                properties:
+                    msg_type:
+                        const: register_res
+                    register_id:
+                        type: integer
+                    success:
+                        const: true
+                    events:
+                        type: array
+                        items:
+                            $ref: "hat-mariner://mariner.yaml#/$defs/event"
+              - type: object
+                required:
+                    - msg_type
+                    - register_id
+                    - success
+                properties:
+                    msg_type:
+                        const: register_res
+                    register_id:
+                        type: integer
+                    success:
+                        const: false
+        query_req:
+            oneOf:
+              - type: object
+                required:
+                    - msg_type
+                    - query_id
+                    - query_type
+                properties:
+                    msg_type:
+                        const: query_req
+                    query_id:
+                        type: integer
+                    query_type:
+                        const: latest
+                    event_types:
+                        type: array
+                        items:
+                            $ref: "hat-mariner://mariner.yaml#/$defs/event_type"
+              - type: object
+                required:
+                    - msg_type
+                    - query_id
+                    - query_type
+                    - order
+                    - order_by
+                properties:
+                    msg_type:
+                        const: query_req
+                    query_id:
+                        type: integer
+                    query_type:
+                        const: timeseries
+                    event_types:
+                        type: array
+                        items:
+                            $ref: "hat-mariner://mariner.yaml#/$defs/event_type"
+                    t_from:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
+                    t_to:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
+                    source_t_from:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
+                    source_t_to:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
+                    order:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/order"
+                    order_by:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/order_by"
+                    max_results:
+                        type: integer
+                    last_event_id:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/event_id"
+              - type: object
+                required:
+                    - msg_type
+                    - query_id
+                    - query_type
+                    - server_id
+                    - persisted
+                properties:
+                    msg_type:
+                        const: query_req
+                    query_id:
+                        type: integer
+                    query_type:
+                        const: server
+                    server_id:
+                        type: integer
+                    persisted:
+                        type: boolean
+                    max_results:
+                        type: integer
+                    last_event_id:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/event_id"
+        query_res:
+            type: object
+            required:
+                - msg_type
+                - query_id
+                - events
+                - more_follows
+            properties:
+                msg_type:
+                    const: query_res
+                query_id:
+                    type: integer
+                events:
+                    type: array
+                    items:
+                        $ref: "hat-mariner://mariner.yaml#/$defs/event"
+                more_follows:
+                    type: boolean
+        ping_req:
+            type: object
+            required:
+                - msg_type
+                - ping_id
+            properties:
+                msg_type:
+                    const: ping_req
+                ping_id:
+                    type: integer
+        ping_res:
+            type: object
+            required:
+                - msg_type
+                - ping_id
+            properties:
+                msg_type:
+                    const: ping_res
+                ping_id:
+                    type: integer
+    status:
+        enum:
+            - STANDBY
+            - OPERATIONAL
+    timestamp:
+        type: object
+        required:
+            - s
+            - us
+        properties:
+            s:
+                type: integer
+            us:
+                type: integer
     event_id:
         type: object
         required:
@@ -73,6 +275,14 @@ definitions:
                 type: integer
             instance:
                 type: integer
+    order:
+        enum:
+            - DESCENDING
+            - ASCENDING
+    order_by:
+        enum:
+            - TIMESTAMP
+            - SOURCE_TIMESTAMP
     event_type:
         type: array
         items:
@@ -105,28 +315,6 @@ definitions:
             properties:
                 type:
                     const: json
-          - type: object
-            required:
-                - type
-                - data
-            properties:
-                type:
-                    const: sbs
-                data:
-                    type: object
-                    required:
-                        - module
-                        - type
-                        - data
-                    properties:
-                        module:
-                            module:
-                                - "null"
-                                - string
-                            type:
-                                type: string
-                            data:
-                                type: bytes
     event:
         type: object
         required:
@@ -137,17 +325,33 @@ definitions:
             - payload
         properties:
             id:
-                "$ref": "hat-event://mariner.yaml#/definitions/event_id"
+                $ref: "hat-mariner://mariner.yaml#/$defs/event_id"
             type:
-                "$ref": "hat-event://mariner.yaml#/definitions/event_type"
+                $ref: "hat-mariner://mariner.yaml#/$defs/event_type"
             timestamp:
-                "$ref": "hat-event://mariner.yaml#/definitions/timestamp"
+                $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
             source_timestamp:
                 oneOf:
                   - "null"
-                  - "$ref": "hat-event://mariner.yaml#/definitions/timestamp"
+                  - $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
             payload:
                 oneOf:
                   - "null"
-                  - "$ref": "hat-event://mariner.yaml#/definitions/payload"
-...
+                  - $ref: "hat-mariner://mariner.yaml#/$defs/payload"
+    register_event:
+        type: object
+        required:
+            - type
+            - source_timestamp
+            - payload
+        properties:
+            type:
+                $ref: "hat-mariner://mariner.yaml#/$defs/event_type"
+            source_timestamp:
+                oneOf:
+                  - "null"
+                  - $ref: "hat-mariner://mariner.yaml#/$defs/timestamp"
+            payload:
+                oneOf:
+                  - "null"
+                  - $ref: "hat-mariner://mariner.yaml#/$defs/payload"

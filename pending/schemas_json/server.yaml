@@ -1,0 +1,22 @@
+
+
+
+    mariner_server:
+        type: object
+        required:
+            - host
+            - port
+            - subscriptions
+        properties:
+            host:
+                type: string
+                default: "127.0.0.1"
+            port:
+                type: integer
+                default: 23014
+            subscriptions:
+                type: array
+                items:
+                    type: array
+                    items:
+                        type: string
