@@ -1,5 +1,6 @@
 import itertools
 import math
+import typing
 
 from hat import aio
 from hat import json
@@ -7,6 +8,29 @@ from hat.drivers import tcp
 
 from hat.mariner.transport import common
 from hat.mariner.transport import encoder
+
+
+ConnectionCb: typing.TypeAlias = aio.AsyncCallable[['Connection'], None]
+
+
+async def connect(addr: tcp.Address,
+                  **kwargs
+                  ) -> 'Connection':
+    conn = await tcp.connect(addr, **kwargs)
+
+    return Connection(conn)
+
+
+async def listen(connection_cb: ConnectionCb,
+                 addr: tcp.Address,
+                 **kwargs) -> tcp.Server:
+
+    async def on_connection(conn):
+        await aio.call(connection_cb, Connection(conn))
+
+    srv = await tcp.listen(on_connection, addr, **kwargs)
+
+    return srv
 
 
 class Connection(aio.Resource):
@@ -18,12 +42,16 @@ class Connection(aio.Resource):
     def async_group(self) -> aio.Group:
         return self._conn.async_group
 
+    @property
+    def info(self) -> tcp.ConnectionInfo:
+        return self.conn.info
+
     async def drain(self):
         await self._conn.drain()
 
     async def send(self, msg: common.Msg):
         msg_json = encoder.encode_msg(msg)
-        msg_bytes = json.encode(msg_json).encode('utf-8')
+        msg_bytes = json.encode(msg_json).encode()
         msg_len = len(msg_bytes)
         len_size = math.ceil(msg_len.bit_length() / 8)
 
@@ -46,7 +74,7 @@ class Connection(aio.Resource):
         msg_len = int.from_bytes(msg_len_bytes, 'big')
 
         msg_bytes = await self._conn.readexactly(msg_len)
-        msg_str = str(msg_bytes, 'utf-8')
+        msg_str = str(msg_bytes, encoding='utf-8')
         msg_json = json.decode(msg_str)
 
         return encoder.decode_msg(msg_json)

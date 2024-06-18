@@ -60,7 +60,7 @@ $defs:
                 required:
                     - msg_type
                     - success
-                    - status
+                    - error
                 properties:
                     msg_type:
                         const: init_res
@@ -301,19 +301,22 @@ $defs:
         oneOf:
           - type: object
             required:
-                - type
+                - payload_type
+                - data_type
                 - data
             properties:
-                type:
+                payload_type:
                     const: binary
+                data_type:
+                    type: string
                 data:
                     type: string
           - type: object
             required:
-                - type
+                - payload_type
                 - data
             properties:
-                type:
+                payload_type:
                     const: json
     event:
         type: object
