@@ -337,19 +337,159 @@ def _decode_register_event(register_event):
 
 
 def _encode_query_params(params):
-    raise NotImplementedError()
+    if isinstance(params, hat.event.common.QueryLatestParams):
+        return _encode_query_latest_params(params)
+
+    if isinstance(params, hat.event.common.QueryTimeseriesParams):
+        return _encode_query_timeseries_params(params)
+
+    if isinstance(params, hat.event.common.QueryServerParams):
+        return _encode_query_server_params(params)
+
+    raise ValueError('unsupported query params')
 
 
 def _decode_query_params(params):
-    raise NotImplementedError()
+    if params['query_type'] == 'latest':
+        return _decode_query_latest_params(params)
+
+    if params['query_type'] == 'timeseries':
+        return _decode_query_timeseries_params(params)
+
+    if params['query_type'] == 'server':
+        return _decode_query_server_params(params)
+
+    raise Exception('invalid query type')
+
+
+def _encode_query_latest_params(params):
+    params_json = {'query_type': 'latest'}
+
+    if params.event_types is not None:
+        params_json['event_types'] = [_encode_event_type(event_type)
+                                      for event_type in params.event_types]
+
+    return params_json
+
+
+def _decode_query_latest_params(params):
+    event_types = ([_decode_event_type(i) for i in params['event_types']]
+                   if 'event_types' in params else None)
+
+    return hat.event.common.QueryLatestParams(event_types=event_types)
+
+
+def _encode_query_timeseries_params(params):
+    params_json = {'query_type': 'timeseries',
+                   'order': params.order.name,
+                   'order_by': params.order_by.name}
+
+    if params.event_types is not None:
+        params_json['event_types'] = [_encode_event_type(event_type)
+                                      for event_type in params.event_types]
+
+    if params.t_from is not None:
+        params_json['t_from'] = _encode_timestamp(params.t_from)
+
+    if params.t_to is not None:
+        params_json['t_to'] = _encode_timestamp(params.t_to)
+
+    if params.source_t_from is not None:
+        params_json['source_t_from'] = _encode_timestamp(params.source_t_from)
+
+    if params.source_t_to is not None:
+        params_json['source_t_to'] = _encode_timestamp(params.source_t_to)
+
+    if params.max_results is not None:
+        params_json['max_results'] = params.max_results
+
+    if params.last_event_id is not None:
+        params_json['last_event_id'] = _encode_event_id(params.last_event_id)
+
+    return params_json
+
+
+def _decode_query_timeseries_params(params):
+    event_types = ([_decode_event_type(i) for i in params['event_types']]
+                   if 'event_types' in params else None)
+    t_from = (_decode_timestamp(params['t_from'])
+              if 't_from' in params else None)
+    t_to = (_decode_timestamp(params['t_to'])
+            if 't_to' in params else None)
+    source_t_from = (_decode_timestamp(params['source_t_from'])
+                     if 'source_t_from' in params else None)
+    source_t_to = (_decode_timestamp(params['source_t_to'])
+                   if 'source_t_to' in params else None)
+    order = hat.event.common.Order[params['order']]
+    order_by = hat.event.common.OrderBy[params['order_by']]
+    last_event_id = (_decode_event_id(params['last_event_id'])
+                     if 'last_event_id' in params else None)
+
+    max_results = params['max_results'] if 'max_results' in params else None
+    if max_results is not None and not isinstance(max_results, int):
+        raise Exception('invalid max results')
+
+    return hat.event.common.QueryTimeseriesParams(event_types=event_types,
+                                                  t_from=t_from,
+                                                  t_to=t_to,
+                                                  source_t_from=source_t_from,
+                                                  source_t_to=source_t_to,
+                                                  order=order,
+                                                  order_by=order_by,
+                                                  max_results=max_results,
+                                                  last_event_id=last_event_id)
+
+
+def _encode_query_server_params(params):
+    params_json = {'query_type': 'server',
+                   'server_id': params.server_id,
+                   'persisted': params.persisted}
+
+    if params.max_results is not None:
+        params_json['max_results'] = params.max_results
+
+    if params.last_event_id is not None:
+        params_json['last_event_id'] = _encode_event_id(params.last_event_id)
+
+    return params_json
+
+
+def _decode_query_server_params(params):
+    server_id = params['server_id']
+    if not isinstance(server_id, int):
+        raise Exception('invalid server id')
+
+    persisted = params['persisted']
+    if not isinstance(persisted, bool):
+        raise Exception('invalid persisted')
+
+    max_results = params['max_results'] if 'max_results' in params else None
+    if max_results is not None and not isinstance(max_results, int):
+        raise Exception('invalid max results')
+
+    last_event_id = (_decode_event_id(params['last_event_id'])
+                     if 'last_event_id' in params else None)
+
+    return hat.event.common.QueryServerParams(server_id=server_id,
+                                              persisted=persisted,
+                                              max_results=max_results,
+                                              last_event_id=last_event_id)
 
 
 def _encode_query_result(result):
-    raise NotImplementedError()
+    return {'events': [_encode_event(event) for event in result.events],
+            'more_follows': result.more_follows}
 
 
 def _decode_query_result(result):
-    raise NotImplementedError()
+    events = [_decode_event(event) for event in result['events']]
+
+    more_follows = result['more_follows']
+    if not isinstance(more_follows, bool):
+        raise Exception('invalid more follows')
+
+    return hat.event.common.QueryResult(events=events,
+                                        more_follows=more_follows)
 
 
 def _encode_event_id(event_id):
