@@ -232,8 +232,8 @@ def _decode_query_req_msg(msg):
 
     params = _decode_query_params(msg)
 
-    return common.QueryReq(query_id=query_id,
-                           params=params)
+    return common.QueryReqMsg(query_id=query_id,
+                              params=params)
 
 
 def _encode_query_res_msg(msg):
@@ -249,8 +249,8 @@ def _decode_query_res_msg(msg):
 
     result = _decode_query_result(msg)
 
-    return common.QueryRes(query_id=query_id,
-                           result=result)
+    return common.QueryResMsg(query_id=query_id,
+                              result=result)
 
 
 def _encode_ping_req_msg(msg):
@@ -263,7 +263,7 @@ def _decode_ping_req_msg(msg):
     if not isinstance(ping_id, int):
         raise Exception('invalid ping id')
 
-    return common.PingReq(ping_id=ping_id)
+    return common.PingReqMsg(ping_id=ping_id)
 
 
 def _encode_ping_res_msg(msg):
@@ -276,7 +276,7 @@ def _decode_ping_res_msg(msg):
     if not isinstance(ping_id, int):
         raise Exception('invalid ping id')
 
-    return common.PingRes(ping_id=ping_id)
+    return common.PingResMsg(ping_id=ping_id)
 
 
 def _encode_event(event):
