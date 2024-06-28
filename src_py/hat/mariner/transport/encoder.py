@@ -545,8 +545,8 @@ def _decode_timestamp(timestamp):
     if not (isinstance(us, int) and 0 <= us < 1_000_000):
         raise Exception('invalid microseconds')
 
-    return common.Timestamp(s=s,
-                            us=us)
+    return hat.event.common.Timestamp(s=s,
+                                      us=us)
 
 
 def _encode_event_payload(payload):

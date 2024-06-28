@@ -9,14 +9,76 @@ import hat.event.common
 from hat.mariner import transport
 
 
-# TODO
-events = []
+events = [
+    hat.event.common.Event(
+        id=hat.event.common.EventId(1, 2, 3),
+        type=('a', 'b', 'c'),
+        timestamp=hat.event.common.now(),
+        source_timestamp=None,
+        payload=None),
 
-# TODO
-register_events = []
+    hat.event.common.Event(
+        id=hat.event.common.EventId(3, 2, 1),
+        type=('c', 'b', 'a'),
+        timestamp=hat.event.common.now(),
+        source_timestamp=hat.event.common.now(),
+        payload=hat.event.common.EventPayloadJson(42)),
 
-# TODO
-query_params = []
+    hat.event.common.Event(
+        id=hat.event.common.EventId(3, 2, 1),
+        type=('c', 'b', 'a'),
+        timestamp=hat.event.common.now(),
+        source_timestamp=hat.event.common.now(),
+        payload=hat.event.common.EventPayloadBinary(type='type',
+                                                    data=b'data'))
+]
+
+register_events = [
+    hat.event.common.RegisterEvent(
+        type=('a', 'b', 'c'),
+        source_timestamp=None,
+        payload=None),
+
+    hat.event.common.RegisterEvent(
+        type=('c', 'b', 'a'),
+        source_timestamp=hat.event.common.now(),
+        payload=hat.event.common.EventPayloadJson(42)),
+
+    hat.event.common.RegisterEvent(
+        type=('c', 'b', 'a'),
+        source_timestamp=hat.event.common.now(),
+        payload=hat.event.common.EventPayloadBinary(type='type',
+                                                    data=b'data'))
+]
+
+query_params = [
+    hat.event.common.QueryLatestParams(),
+
+    hat.event.common.QueryLatestParams(
+        event_types=[('*',)]),
+
+    hat.event.common.QueryTimeseriesParams(),
+
+    hat.event.common.QueryTimeseriesParams(
+        event_types=[('a', 'b', 'c')],
+        t_from=hat.event.common.now(),
+        t_to=hat.event.common.now(),
+        source_t_from=hat.event.common.now(),
+        source_t_to=hat.event.common.now(),
+        order=hat.event.common.Order.ASCENDING,
+        order_by=hat.event.common.OrderBy.SOURCE_TIMESTAMP,
+        max_results=123,
+        last_event_id=hat.event.common.EventId(1, 2, 3)),
+
+    hat.event.common.QueryServerParams(
+        server_id=123),
+
+    hat.event.common.QueryServerParams(
+        server_id=123,
+        persisted=True,
+        max_results=123,
+        last_event_id=hat.event.common.EventId(1, 2, 3))
+]
 
 msgs = [
     transport.InitReqMsg(client_name='name',
