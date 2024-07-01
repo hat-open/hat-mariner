@@ -23,7 +23,8 @@ async def connect(addr: tcp.Address,
 
 async def listen(connection_cb: ConnectionCb,
                  addr: tcp.Address,
-                 **kwargs) -> tcp.Server:
+                 **kwargs
+                 ) -> tcp.Server:
 
     async def on_connection(conn):
         await aio.call(connection_cb, Connection(conn))

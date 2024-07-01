@@ -1,3 +1,68 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 $id: "hat-mariner://server.yaml"
+title: Mariner Server
+description: Mariner Server's configuration
 type: object
+required:
+    - mariner
+    - eventer
+    - clients
+properties:
+    type:
+        const: mariner
+        description: configuration type identification
+    version:
+        type: string
+        description: component version
+    log:
+        $ref: "hat-json://logging.yaml"
+    mariner:
+        type: object
+        required:
+            - host
+            - port
+        properties:
+            host:
+                type: string
+                default: "127.0.0.1"
+            port:
+                type: integer
+                default: 23014
+    eventer:
+        type: object
+        required:
+            - host
+            - port
+            - token
+        properties:
+            host:
+                type: string
+                default: "127.0.0.1"
+            port:
+                type: integer
+                default: 23012
+            token:
+                type:
+                    - 'null'
+                    - string
+    clients:
+        type: array
+        items:
+            type: object
+            required:
+                - name
+                - token
+                - subscriptions
+            properties:
+                name:
+                    type: string
+                token:
+                    type:
+                        - 'null'
+                        - string
+                subscriptions:
+                    type: array
+                    items:
+                        type: array
+                        items:
+                            type: string
