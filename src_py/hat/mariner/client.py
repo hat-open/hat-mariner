@@ -94,7 +94,7 @@ class Connection(aio.Resource):
         req = transport.RegisterReqMsg(register_id=register_id,
                                        register_events=register_events)
 
-        res = await self._send_req(req)
+        res = await self._send_req(req, register_id)
         if not isinstance(res, transport.RegisterResMsg):
             raise Exception('invalid register response')
 
@@ -107,7 +107,7 @@ class Connection(aio.Resource):
         req = transport.QueryReqMsg(query_id=query_id,
                                     params=params)
 
-        res = await self._send_req(req)
+        res = await self._send_req(req, query_id)
         if not isinstance(res, transport.QueryResMsg):
             raise Exception('invalid query response')
 
@@ -142,11 +142,11 @@ class Connection(aio.Resource):
                     self._status = msg.status
 
                     if self._status_cb:
-                        await aio.call(self._status_cb, msg.status)
+                        await aio.call(self._status_cb, self, msg.status)
 
                 elif isinstance(msg, transport.EventsMsg):
                     if self._events_cb:
-                        await aio.call(self._events_cb, msg.events)
+                        await aio.call(self._events_cb, self, msg.events)
 
                 elif isinstance(msg, transport.RegisterResMsg):
                     future = self._futures.get(msg.register_id)

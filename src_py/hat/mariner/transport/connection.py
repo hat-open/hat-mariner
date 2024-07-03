@@ -45,7 +45,7 @@ class Connection(aio.Resource):
 
     @property
     def info(self) -> tcp.ConnectionInfo:
-        return self.conn.info
+        return self._conn.info
 
     async def drain(self):
         await self._conn.drain()

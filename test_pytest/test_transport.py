@@ -144,36 +144,41 @@ msgs = [
 
 
 def assert_msg_equal(msg1, msg2):
-    msgs = [msg1, msg2]
 
-    for i, msg in enumerate(list(msgs)):
+    def normalize(msg):
         if isinstance(msg, transport.InitReqMsg):
-            msgs[i] = msg._replace(subscriptions=list(msg.subscriptions))
+            return msg._replace(subscriptions=list(msg.subscriptions))
 
-        elif isinstance(msg, transport.EventsMsg):
-            msgs[i] = msg._replace(events=list(msg.events))
+        if isinstance(msg, transport.EventsMsg):
+            return msg._replace(events=list(msg.events))
 
-        elif isinstance(msg, transport.RegisterReqMsg):
-            msgs[i] = msg._replace(register_events=list(msg.register_events))
+        if isinstance(msg, transport.RegisterReqMsg):
+            return msg._replace(register_events=list(msg.register_events))
 
-        elif isinstance(msg, transport.RegisterResMsg):
-            if msg.events is not None:
-                msgs[i] = msg._replace(events=list(msg.events))
+        if isinstance(msg, transport.RegisterResMsg):
+            return (msg._replace(events=list(msg.events))
+                    if msg.events is not None
+                    else msg)
 
-        elif isinstance(msg, transport.QueryReqMsg):
+        if isinstance(msg, transport.QueryReqMsg):
             if (isinstance(msg.params,
                            (hat.event.common.QueryLatestParams,
                             hat.event.common.QueryTimeseriesParams)) and
                     msg.params.event_types is not None):
                 params = msg.params._replace(
                     event_types=list(msg.params.event_types))
-                msgs[i] = msg._replace(params=params)
+                return msg._replace(params=params)
 
-        elif isinstance(msg, transport.QueryResMsg):
+            else:
+                return msg
+
+        if isinstance(msg, transport.QueryResMsg):
             result = msg.result._replace(events=list(msg.result.events))
-            msgs[i] = msg._replace(result=result)
+            return msg._replace(result=result)
 
-    assert msgs[0] == msgs[1]
+        return msg
+
+    assert normalize(msg1) == normalize(msg2)
 
 
 @pytest.fixture
