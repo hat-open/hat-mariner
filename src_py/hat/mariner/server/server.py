@@ -100,7 +100,7 @@ async def _create_client(eventer_conf, client_confs, mariner_conn):
             server_id=init_req.server_id,
             persisted=init_req.persisted,
             status_cb=on_status,
-            eventes_cb=on_events)
+            events_cb=on_events)
 
         try:
             eventer_client.async_group.spawn(aio.call_on_cancel,
@@ -178,7 +178,7 @@ class _Client(aio.Resource):
     async def _send_loop(self):
         try:
             while True:
-                msg = await self._send_loop.get()
+                msg = await self._send_queue.get()
 
                 await self._mariner_conn.send(msg)
 
@@ -194,7 +194,7 @@ class _Client(aio.Resource):
     async def _query_loop(self):
         try:
             while True:
-                req = await self._query_loop.get()
+                req = await self._send_queue.get()
 
                 result = await self._eventer_client.query(req.params)
 
