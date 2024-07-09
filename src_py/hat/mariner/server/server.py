@@ -194,7 +194,7 @@ class _Client(aio.Resource):
     async def _query_loop(self):
         try:
             while True:
-                req = await self._send_queue.get()
+                req = await self._query_queue.get()
 
                 result = await self._eventer_client.query(req.params)
 
