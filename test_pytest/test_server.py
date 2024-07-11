@@ -70,8 +70,6 @@ async def test_init_success(conf, mariner_addr, eventer_addr, status,
                             client_token):
     client_name = 'cli1'
     subscriptions = []
-    server_id = None
-    persisted = False
 
     clients = [{'name': client_name,
                 'token': client_token,
@@ -89,8 +87,8 @@ async def test_init_success(conf, mariner_addr, eventer_addr, status,
         client_name=client_name,
         client_token=client_token,
         subscriptions=subscriptions,
-        server_id=server_id,
-        persisted=persisted)
+        server_id=None,
+        persisted=False)
     await conn.send(init_req)
 
     init_resp = await conn.receive()
@@ -155,10 +153,10 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
     clients_count = 10
     conn_info_queue = aio.Queue()
 
-    async def on_connection(conn_info):
+    def on_connection(conn_info):
         conn_info_queue.put_nowait(conn_info)
 
-    clients_init_msgs = [
+    init_msgs = [
         transport.InitReqMsg(
             client_name=f"cli{i}",
             client_token=f"cli{i} token",
@@ -172,7 +170,7 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
                      'token': i.client_token,
                      'subscriptions': [i.subscriptions[0],
                                        ('d', 'e', 'f')]}
-                    for i in clients_init_msgs]
+                    for i in init_msgs]
     conf = json.set_(conf, 'clients', clients_conf)
 
     eventer_server = await hat.event.eventer.listen(
@@ -185,7 +183,7 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
     mariner_conns = set()
     eventer_conn_infos = set()
 
-    for init_msg, client_conf in zip(clients_init_msgs, clients_conf):
+    for init_msg, client_conf in zip(init_msgs, clients_conf):
         mariner_conn = await transport.connect(mariner_addr)
         mariner_conns.add(mariner_conn)
 
@@ -214,8 +212,8 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
     await eventer_server.async_close()
 
     eventer_disconn_infos = set()
-    for eventer_conn_info in eventer_conn_infos:
-        disconnected_eventer_conn_info = await conn_info_queue.get()
+    while not conn_info_queue.empty():
+        disconnected_eventer_conn_info = conn_info_queue.get_nowait()
         eventer_disconn_infos.add(disconnected_eventer_conn_info)
 
     assert eventer_disconn_infos == eventer_conn_infos
@@ -532,6 +530,177 @@ async def test_register(conf, mariner_addr, eventer_addr):
     assert register_resp_msg.register_id == register_req_msg.register_id
     assert register_resp_msg.success is False
     assert register_resp_msg.events is None
+
+    await server.async_close()
+    await eventer_server.async_close()
+
+
+async def test_eventer_closes_on_mariner_close(conf, mariner_addr,
+                                               eventer_addr):
+    clients_count = 10
+    conn_info_queue = aio.Queue()
+
+    def on_connection(conn_info):
+        conn_info_queue.put_nowait(conn_info)
+
+    init_msgs = [
+        transport.InitReqMsg(
+            client_name=f"cli{i}",
+            client_token=f"cli{i} token",
+            subscriptions=[(f'x{i}', f'y{i}'),
+                           ('a', 'b', 'c')],
+            server_id=i,
+            persisted=bool(i % 2))
+        for i in range(clients_count)]
+
+    clients_conf = [{'name': i.client_name,
+                     'token': i.client_token,
+                     'subscriptions': [i.subscriptions[0],
+                                       ('d', 'e', 'f')]}
+                    for i in init_msgs]
+    conf = json.set_(conf, 'clients', clients_conf)
+
+    eventer_server = await hat.event.eventer.listen(
+        eventer_addr,
+        connected_cb=on_connection,
+        disconnected_cb=on_connection)
+
+    server = await hat.mariner.server.server.create_server(conf)
+
+    mariner_conns = set()
+    eventer_conn_infos = set()
+    for init_req in init_msgs:
+        mariner_conn = await transport.connect(mariner_addr)
+
+        await mariner_conn.send(init_req)
+        init_resp = await mariner_conn.receive()
+        assert init_resp.success is True
+        conn_info = await conn_info_queue.get()
+        mariner_conns.add(mariner_conn)
+        eventer_conn_infos.add(conn_info)
+
+    while mariner_conns:
+        mariner_conn = mariner_conns.pop()
+        mariner_conn.close()
+
+        disconn_info = await conn_info_queue.get()
+        assert disconn_info in eventer_conn_infos
+
+        assert all(conn.is_open for conn in mariner_conns)
+
+    await server.async_close()
+    await eventer_server.async_close()
+
+
+@pytest.mark.parametrize('invalid_msg', [
+    transport.QueryReqMsg(
+        query_id=123,
+        params=hat.event.common.QueryLatestParams(
+            event_types=[('*',)]),),
+    transport.PingReqMsg(ping_id=456),
+    transport.RegisterReqMsg(
+        register_id=345,
+        register_events=[hat.event.common.RegisterEvent(
+            type=('a', 'xyz', 'b'),
+            source_timestamp=hat.event.common.now(),
+            payload=hat.event.common.EventPayloadJson('abc'))])
+    ])
+async def test_invalid_init_msg(conf, mariner_addr, eventer_addr, invalid_msg):
+    conn_info_queue = aio.Queue()
+
+    def on_connection(conn_info):
+        conn_info_queue.put_nowait(conn_info)
+
+    clients = [{'name': 'cli1',
+                'token': 'cli1 token',
+                'subscriptions': []}]
+    conf = json.set_(conf, 'clients', clients)
+
+    eventer_server = await hat.event.eventer.listen(
+        eventer_addr,
+        connected_cb=on_connection)
+
+    server = await hat.mariner.server.server.create_server(conf)
+
+    mariner_conn = await transport.connect(mariner_addr)
+
+    await mariner_conn.send(invalid_msg)
+
+    with pytest.raises(ConnectionError):
+        await mariner_conn.receive()
+    await mariner_conn.wait_closed()
+
+    assert conn_info_queue.empty()
+
+    await server.async_close()
+    await eventer_server.async_close()
+
+
+@pytest.mark.parametrize('invalid_msg', [
+    transport.InitReqMsg(
+        client_name='cli1',
+        client_token='cli1 token',
+        subscriptions=[],
+        server_id=None,
+        persisted=False),
+    transport.InitResMsg(
+        success=True,
+        status=hat.event.common.Status.STANDBY,
+        error=None),
+    transport.StatusMsg(
+        status=hat.event.common.Status.OPERATIONAL),
+    transport.EventsMsg(events=[]),
+    transport.QueryResMsg(query_id=123,
+                          result=hat.event.common.QueryResult(
+                              events=[],
+                              more_follows=False)),
+    transport.PingResMsg(ping_id=456)
+    ])
+async def test_invalid_message(conf, mariner_addr, eventer_addr, invalid_msg):
+    conn_info_queue = aio.Queue()
+
+    def on_connection(conn_info):
+        conn_info_queue.put_nowait(conn_info)
+
+    client_name = 'cli1'
+    client_token = 'cli1 token'
+    subscriptions = []
+    server_id = None
+    persisted = False
+
+    clients = [{'name': client_name,
+                'token': client_token,
+                'subscriptions': []}]
+    conf = json.set_(conf, 'clients', clients)
+
+    eventer_server = await hat.event.eventer.listen(
+        eventer_addr,
+        connected_cb=on_connection,
+        disconnected_cb=on_connection)
+
+    server = await hat.mariner.server.server.create_server(conf)
+
+    mariner_conn = await transport.connect(mariner_addr)
+
+    init_req = transport.InitReqMsg(
+        client_name=client_name,
+        client_token=client_token,
+        subscriptions=subscriptions,
+        server_id=server_id,
+        persisted=persisted)
+    await mariner_conn.send(init_req)
+    init_resp = await mariner_conn.receive()
+    assert init_resp.success is True
+    conn_info = await conn_info_queue.get()
+
+    await mariner_conn.send(invalid_msg)
+
+    with pytest.raises(ConnectionError):
+        await mariner_conn.receive()
+    await mariner_conn.wait_closed()
+
+    disconn_info = await conn_info_queue.get()
+    assert disconn_info == conn_info
 
     await server.async_close()
     await eventer_server.async_close()
