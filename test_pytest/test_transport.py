@@ -2,7 +2,6 @@ import pytest
 
 from hat import aio
 from hat import util
-
 from hat.drivers import tcp
 import hat.event.common
 
