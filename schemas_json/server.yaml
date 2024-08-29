@@ -4,6 +4,7 @@ title: Mariner Server
 description: Mariner Server's configuration
 type: object
 required:
+    - name
     - mariner
     - eventer
     - clients
@@ -16,6 +17,9 @@ properties:
         description: component version
     log:
         $ref: "hat-json://logging.yaml"
+    name:
+        type: string
+        description: component name
     mariner:
         type: object
         required:

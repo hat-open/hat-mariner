@@ -14,6 +14,7 @@ mlog: logging.Logger = logging.getLogger(__name__)
 
 async def create_server(conf: json.Data) -> 'Server':
     srv = Server()
+    srv._name = conf['name']
     srv._eventer_conf = conf['eventer']
     srv._client_confs = {client_conf['name']: client_conf
                          for client_conf in conf['clients']}
@@ -35,7 +36,8 @@ class Server(aio.Resource):
 
     async def _on_connection(self, mariner_conn):
         try:
-            client = await _create_client(eventer_conf=self._eventer_conf,
+            client = await _create_client(component_name=self._name,
+                                          eventer_conf=self._eventer_conf,
                                           client_confs=self._client_confs,
                                           mariner_conn=mariner_conn)
 
@@ -52,7 +54,8 @@ class Server(aio.Resource):
             await aio.uncancellable(client.async_close())
 
 
-async def _create_client(eventer_conf, client_confs, mariner_conn):
+async def _create_client(component_name, eventer_conf, client_confs,
+                         mariner_conn):
     init_req = await mariner_conn.receive()
     if not isinstance(init_req, transport.InitReqMsg):
         raise Exception('invalid init request')
@@ -94,7 +97,7 @@ async def _create_client(eventer_conf, client_confs, mariner_conn):
         eventer_client = await hat.event.eventer.connect(
             addr=tcp.Address(host=eventer_conf['host'],
                              port=eventer_conf['port']),
-            client_name=f'mariner - {init_req.client_name}',
+            client_name=f'mariner/{component_name}/{init_req.client_name}',
             client_token=eventer_conf['token'],
             subscriptions=subscription.get_query_types(),
             server_id=init_req.server_id,

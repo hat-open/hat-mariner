@@ -26,6 +26,7 @@ def eventer_addr():
 @pytest.fixture
 def conf(mariner_addr, eventer_addr):
     return {
+        'name': 'name',
         'mariner': {
             'host': mariner_addr.host,
             'port': mariner_addr.port},
@@ -197,7 +198,7 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
         eventer_conn_infos.add(eventer_conn_info)
 
         assert (eventer_conn_info.client_name ==
-                f"mariner - {init_msg.client_name}")
+                f"mariner/{conf['name']}/{init_msg.client_name}")
         assert eventer_conn_info.client_token == conf['eventer']['token']
         assert (set(eventer_conn_info.subscription.get_query_types()) ==
                 set(init_msg.subscriptions).intersection(
@@ -427,7 +428,7 @@ async def test_query(conf, eventer_addr, mariner_addr,
     def on_query(conn_info, eventer_query_params):
         assert query_params == eventer_query_params
 
-        assert conn_info.client_name == f"mariner - {client_conf['name']}"
+        assert conn_info.client_name == f"mariner/{conf['name']}/{client_conf['name']}"  # NOQA
         assert conn_info.client_token == conf['eventer']['token']
         assert (list(conn_info.subscription.get_query_types()) ==
                 client_conf['subscriptions'])
