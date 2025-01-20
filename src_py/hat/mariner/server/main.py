@@ -45,7 +45,8 @@ def sync_main(conf: json.Data):
     """Sync main entry point"""
     aio.init_asyncio()
 
-    common.json_schema_repo.validate('hat-mariner://server.yaml', conf)
+    validator = json.DefaultSchemaValidator(common.json_schema_repo)
+    validator.validate('hat-mariner://server.yaml', conf)
 
     log_conf = conf.get('log')
     if log_conf:

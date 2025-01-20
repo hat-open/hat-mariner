@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from hat import json
 from hat.doit import common
 from hat.doit.docs import (build_sphinx,
                            build_pdoc)
@@ -72,16 +71,8 @@ def task_docs():
 
 def task_json_schema_repo():
     """Generate JSON Schema Repository"""
-    src_paths = list(schemas_json_dir.rglob('*.yaml'))
-
-    def generate():
-        repo = json.SchemaRepository(*src_paths)
-        data = repo.to_json()
-        json.encode_file(data, json_schema_repo_path, indent=None)
-
-    return {'actions': [generate],
-            'file_dep': src_paths,
-            'targets': [json_schema_repo_path]}
+    return common.get_task_json_schema_repo(schemas_json_dir.rglob('*.yaml'),
+                                            json_schema_repo_path)
 
 
 def task_pip_requirements():
