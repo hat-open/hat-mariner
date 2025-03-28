@@ -1,18 +1,18 @@
 [project]
 name = "hat-mariner"
-version = "0.9.4"
+version = "0.9.5"
 description = "Hat mariner"
 readme = "README.rst"
 requires-python = ">=3.10"
 license = {text = "Apache-2.0"}
 dependencies = [
     "appdirs ~=1.4.4",
-    "hat-aio ~=0.7.11",
-    "hat-drivers ~=0.8.14",
-    "hat-event ~=0.9.29",
-    "hat-json ~=0.6.0",
-    "hat-monitor ~=0.8.17",
-    "hat-util ~=0.6.17",
+    "hat-aio ~=0.7.12",
+    "hat-drivers ~=0.9.1",
+    "hat-event ~=0.9.36",
+    "hat-json ~=0.6.2",
+    "hat-monitor ~=0.8.19",
+    "hat-util ~=0.6.19",
 ]
 
 [project.urls]
@@ -25,12 +25,12 @@ hat-mariner-server = "hat.mariner.server.main:main"
 
 [project.optional-dependencies]
 dev = [
-    "hat-doit ~=0.16.0",
+    "hat-doit ~=0.16.2",
     "sphinxcontrib-programoutput >=0.17",
 ]
 
 [build-system]
-requires = ["hat-doit ~=0.16.0"]
+requires = ["hat-doit ~=0.16.2"]
 build-backend = "hat.doit.pep517"
 
 [tool.pytest.ini_options]
