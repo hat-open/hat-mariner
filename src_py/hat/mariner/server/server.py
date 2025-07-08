@@ -18,6 +18,8 @@ async def create_server(conf: json.Data) -> 'Server':
     srv._eventer_conf = conf['eventer']
     srv._client_confs = {client_conf['name']: client_conf
                          for client_conf in conf['clients']}
+    srv._validator = json.DefaultSchemaValidator(
+        json.create_schema_repository(*conf.get('schemas', [])))
 
     srv._srv = await transport.listen(
         connection_cb=srv._on_connection,
@@ -39,6 +41,7 @@ class Server(aio.Resource):
             client = await _create_client(component_name=self._name,
                                           eventer_conf=self._eventer_conf,
                                           client_confs=self._client_confs,
+                                          validator=self._validator,
                                           mariner_conn=mariner_conn)
 
         except Exception as e:
@@ -54,7 +57,7 @@ class Server(aio.Resource):
             await aio.uncancellable(client.async_close())
 
 
-async def _create_client(component_name, eventer_conf, client_confs,
+async def _create_client(component_name, eventer_conf, client_confs, validator,
                          mariner_conn):
     init_req = await mariner_conn.receive()
     if not isinstance(init_req, transport.InitReqMsg):
@@ -85,6 +88,11 @@ async def _create_client(component_name, eventer_conf, client_confs,
             init_req.subscriptions)
 
         subscription = conf_subscription.intersection(mariner_subscription)
+
+        register_event_schema_ids = hat.event.common.create_event_type_collection(  # NOQA
+            (hat.event.common.create_subscription(i['subscriptions']),
+             i.get('schema_id'))
+            for i in client_conf['register_events'])
 
     except Exception as e:
         init_res = transport.InitResMsg(success=False,
@@ -130,14 +138,18 @@ async def _create_client(component_name, eventer_conf, client_confs,
 
     client = _Client()
     client._conf = client_conf
+    client._validator = validator
     client._send_queue = send_queue
+    client._register_event_schema_ids = register_event_schema_ids
     client._query_queue = aio.Queue(1024)
+    client._register_queue = aio.Queue(1024)
     client._mariner_conn = mariner_conn
     client._eventer_client = eventer_client
 
     client.async_group.spawn(client._receive_loop)
     client.async_group.spawn(client._send_loop)
     client.async_group.spawn(client._query_loop)
+    client.async_group.spawn(client._register_loop)
 
     return client
 
@@ -154,10 +166,7 @@ class _Client(aio.Resource):
                 req = await self._mariner_conn.receive()
 
                 if isinstance(req, transport.RegisterReqMsg):
-                    res = transport.RegisterResMsg(register_id=req.register_id,
-                                                   success=False,
-                                                   events=None)
-                    await self._send_queue.put(res)
+                    await self._register_queue.put(req)
 
                 elif isinstance(req, transport.QueryReqMsg):
                     await self._query_queue.put(req)
@@ -213,3 +222,56 @@ class _Client(aio.Resource):
 
         finally:
             self.close()
+
+    async def _register_loop(self):
+        try:
+            while True:
+                req = await self._register_queue.get()
+
+                if all(self._is_register_event_valid(register_event)
+                       for register_event in req.register_events):
+                    events = await self._eventer_client.register(
+                        req.register_events, True)
+
+                else:
+                    events = None
+
+                res = transport.RegisterResMsg(register_id=req.register_id,
+                                               success=(events is not None),
+                                               events=events)
+
+                await self._send_queue.put(res)
+
+        except ConnectionError:
+            pass
+
+        except Exception as e:
+            mlog.error('register loop error: %s', e, exc_info=e)
+
+        finally:
+            self.close()
+
+    def _is_register_event_valid(self, register_event):
+        schema_ids = self._register_event_schema_ids.get(register_event.type)
+        if not isinstance(schema_ids, set):
+            schema_ids = set(schema_ids)
+
+        if not schema_ids:
+            return False
+
+        for schema_id in schema_ids:
+            if schema_id is None:
+                continue
+
+            if not isinstance(register_event.payload,
+                              hat.event.common.EventPayloadJson):
+                return False
+
+            try:
+                self._validator.validate(schema_id,
+                                         register_event.payload.data)
+
+            except Exception:
+                return False
+
+        return True

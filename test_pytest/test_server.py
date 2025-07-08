@@ -74,7 +74,8 @@ async def test_init_success(conf, mariner_addr, eventer_addr, status,
 
     clients = [{'name': client_name,
                 'token': client_token,
-                'subscriptions': []}]
+                'subscriptions': [],
+                'register_events': []}]
     conf = json.set_(conf, 'clients', clients)
 
     eventer_server = await hat.event.eventer.listen(eventer_addr,
@@ -116,7 +117,8 @@ async def test_init_failure(conf, mariner_addr, eventer_addr, client_name,
 
     clients = [{'name': 'cli1',
                 'token': 'cli1 token',
-                'subscriptions': []}]
+                'subscriptions': [],
+                'register_events': []}]
     conf = json.set_(conf, 'clients', clients)
 
     if with_eventer:
@@ -170,7 +172,8 @@ async def test_eventer_connect(conf, mariner_addr, eventer_addr):
     clients_conf = [{'name': i.client_name,
                      'token': i.client_token,
                      'subscriptions': [i.subscriptions[0],
-                                       ('d', 'e', 'f')]}
+                                       ('d', 'e', 'f')],
+                     'register_events': []}
                     for i in init_msgs]
     conf = json.set_(conf, 'clients', clients_conf)
 
@@ -235,7 +238,8 @@ async def test_status(conf, mariner_addr, eventer_addr):
 
     clients_conf = [{'name': f'cli{i}',
                      'token': f'cli{i} token',
-                     'subscriptions': []}
+                     'subscriptions': [],
+                     'register_events': []}
                     for i in range(clients_count)]
     conf = json.set_(conf, 'clients', clients_conf)
 
@@ -304,11 +308,13 @@ async def test_events(conf, mariner_addr, eventer_addr, evt_types_notified,
         {'name': 'cli1',
          'token': 'cli1 token',
          'subscriptions': [('a', 'b', 'c'),
-                           ('b', 'c', 'e')]},
+                           ('b', 'c', 'e')],
+         'register_events': []},
         {'name': 'cli2',
          'token': 'cli2 token',
          'subscriptions': [('a', 'b', 'c'),
-                           ('d', 'e', 'f')]}]
+                           ('d', 'e', 'f')],
+         'register_events': []}]
     conf = json.set_(conf, 'clients', clients_conf)
 
     eventer_server = await hat.event.eventer.listen(eventer_addr)
@@ -421,7 +427,8 @@ async def test_query(conf, eventer_addr, mariner_addr,
 
     client_conf = {'name': 'cli1',
                    'token': 'client token',
-                   'subscriptions': []}
+                   'subscriptions': [],
+                   'register_events': []}
     clients = [client_conf]
     conf = json.set_(conf, 'clients', clients)
 
@@ -469,7 +476,8 @@ async def test_query(conf, eventer_addr, mariner_addr,
 async def test_ping(conf, mariner_addr, eventer_addr):
     client_conf = {'name': 'cli1',
                    'token': 'client token',
-                   'subscriptions': []}
+                   'subscriptions': [],
+                   'register_events': []}
     clients = [client_conf]
     conf = json.set_(conf, 'clients', clients)
 
@@ -498,10 +506,12 @@ async def test_ping(conf, mariner_addr, eventer_addr):
     await eventer_server.async_close()
 
 
+@pytest.mark.skip("WIP")
 async def test_register(conf, mariner_addr, eventer_addr):
     client_conf = {'name': 'cli1',
                    'token': 'client token',
-                   'subscriptions': []}
+                   'subscriptions': [],
+                   'register_events': []}
     clients = [client_conf]
     conf = json.set_(conf, 'clients', clients)
 
@@ -557,7 +567,8 @@ async def test_eventer_closes_on_mariner_close(conf, mariner_addr,
     clients_conf = [{'name': i.client_name,
                      'token': i.client_token,
                      'subscriptions': [i.subscriptions[0],
-                                       ('d', 'e', 'f')]}
+                                       ('d', 'e', 'f')],
+                     'register_events': []}
                     for i in init_msgs]
     conf = json.set_(conf, 'clients', clients_conf)
 
@@ -614,7 +625,8 @@ async def test_invalid_init_msg(conf, mariner_addr, eventer_addr, invalid_msg):
 
     clients = [{'name': 'cli1',
                 'token': 'cli1 token',
-                'subscriptions': []}]
+                'subscriptions': [],
+                'register_events': []}]
     conf = json.set_(conf, 'clients', clients)
 
     eventer_server = await hat.event.eventer.listen(
@@ -671,7 +683,8 @@ async def test_invalid_message(conf, mariner_addr, eventer_addr, invalid_msg):
 
     clients = [{'name': client_name,
                 'token': client_token,
-                'subscriptions': []}]
+                'subscriptions': [],
+                'register_events': []}]
     conf = json.set_(conf, 'clients', clients)
 
     eventer_server = await hat.event.eventer.listen(

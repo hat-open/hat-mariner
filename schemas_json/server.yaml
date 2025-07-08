@@ -57,6 +57,7 @@ properties:
                 - name
                 - token
                 - subscriptions
+                - register_events
             properties:
                 name:
                     type: string
@@ -65,8 +66,26 @@ properties:
                         - 'null'
                         - string
                 subscriptions:
+                    $ref: "hat-mariner://server.yaml#/$defs/event_types"
+                register_events:
                     type: array
                     items:
-                        type: array
-                        items:
-                            type: string
+                        type: object
+                        required:
+                            - subscriptions
+                        properties:
+                            subscriptions:
+                                $ref: "hat-mariner://server.yaml#/$defs/event_types"
+                            schema_id:
+                                type: string
+    schemas:
+        type: array
+        items:
+            type: object
+$defs:
+    event_types:
+        type: array
+        items:
+            type: array
+            items:
+                type: string
