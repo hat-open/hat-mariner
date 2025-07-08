@@ -1,0 +1,971 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="./">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="search" title="Search" href="search.html" /><link rel="next" title="Mariner client" href="client.html" /><link rel="prev" title="hat-mariner - Mariner server and client" href="index.html" />
+
+    <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
+        <title>Mariner - hat-mariner documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=302659d7" />
+    <link rel="stylesheet" type="text/css" href="_static/hat.css?v=d90f72ce" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">hat-mariner  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">hat-mariner  documentation</span>
+  
+</a><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul class="current">
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Mariner</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Mariner client</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Mariner server</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="mariner">
+<span id="id1"></span><h1>Mariner<a class="headerlink" href="#mariner" title="Link to this heading">¶</a></h1>
+<p>Mariner communication protocol enables communication between Mariner Server
+and Mariner Client, based on TCP communication with JSON encoded messages.
+It is desined as communication interface between Hat-based systems and
+external applications. Exchange of data is based on sending/receiving
+event structures.</p>
+<p>For more information on event structures, see
+<a class="reference external" href="https://hat-event.hat-open.com/event.html">https://hat-event.hat-open.com/event.html</a>.</p>
+<section id="transport">
+<h2>Transport<a class="headerlink" href="#transport" title="Link to this heading">¶</a></h2>
+<p>Mariner Server and Mariner Client (in the remainder of this document, mostly
+referred only as <cite>server</cite> and <cite>client</cite>) communicate by establishing
+TCP connection. Server opens listening socket and accepts new TCP connections
+initiated by client. In addition to non encrypted communication, TCP stream
+can be wrapped in SSL layer. Both server and client can close TCP connection
+at any time, thus closing Mariner communication.</p>
+<p>For each connection, underlying TCP stream is segmented into blocks. Each block
+contains a single communication message prefixed by its message header. This
+header consists of <cite>1+m</cite> bytes where the first byte contains the value <cite>m</cite>
+(header byte length), while following <cite>m</cite> bytes contain value <cite>k</cite> (message byte
+length) encoded as big-endian (the first byte value does not include the first
+header byte and message length does not include header length). Message itself
+is utf-8 encoded JSON value.</p>
+<p>Visualization of the communication stream:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">address</span>    <span class="o">...</span>  <span class="o">|</span>  <span class="n">n</span>  <span class="o">|</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span> <span class="o">|</span>  <span class="o">...</span>  <span class="o">|</span> <span class="n">n</span><span class="o">+</span><span class="n">m</span> <span class="o">|</span> <span class="n">n</span><span class="o">+</span><span class="n">m</span><span class="o">+</span><span class="mi">1</span> <span class="o">|</span>  <span class="o">...</span>  <span class="o">|</span> <span class="n">n</span><span class="o">+</span><span class="n">m</span><span class="o">+</span><span class="n">k</span> <span class="o">|</span>  <span class="o">...</span>
+         <span class="o">-------+-----+-----+-------+-----+-------+-------+-------+-------</span>
+   <span class="n">data</span>    <span class="o">...</span>  <span class="o">|</span>  <span class="n">m</span>  <span class="o">|</span>         <span class="n">k</span>         <span class="o">|</span>        <span class="n">message</span>        <span class="o">|</span>  <span class="o">...</span>
+         <span class="o">-------+-----+-----+-------+-----+-------+-------+-------+-------</span>
+</pre></div>
+</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><cite>m</cite> is byte length of <cite>k</cite> (header length without first byte)</p></li>
+<li><p><cite>k</cite> is byte length of <cite>message</cite> (<cite>n+1</cite> is the most significant byte)</p></li>
+<li><p><cite>message</cite> is JSON encoded message</p></li>
+</ul>
+</section>
+<section id="messages">
+<h2>Messages<a class="headerlink" href="#messages" title="Link to this heading">¶</a></h2>
+<p>Communication between server and client is based on full-duplex message
+passing where both server and client can send/receive messages at any time.
+Single message is represented with JSON Object with mandatory property
+<code class="docutils literal notranslate"><span class="pre">msg_type</span></code> (value of this property is always string). Property with key
+<code class="docutils literal notranslate"><span class="pre">msg_type</span></code> represents type of communication message. Existence and semantics
+of other properties is dependent of message type. Structure of messages is
+defined by JSON Schema <code class="docutils literal notranslate"><span class="pre">hat-mariner://mariner.yaml#</span></code> (see
+<a class="reference internal" href="#json-schema-definitions">JSON Schema definitions</a>).</p>
+<p>Supported messages (identified by message type) are:</p>
+<ul>
+<li><p><cite>init_req</cite></p>
+<blockquote>
+<div><p>Initial message sent by client. This message can be sent only once,
+immediately after establishment of TCP connection. This message
+identifies client and contains additional initialization parameters.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>client_name</cite></p>
+<p>Label used as client identification.</p>
+</li>
+<li><p><cite>client_token</cite></p>
+<p>Optional client token. Additional client identification which can be used
+for authentication or state synchronization between client and server.</p>
+</li>
+<li><p><cite>subscriptions</cite></p>
+<p>List of event types (including query subtypes) which is used as filter
+for future event notifications. Only events with types satisfying
+subscriptions will be notified to client.</p>
+</li>
+<li><p><cite>server_id</cite></p>
+<p>Optional identification of server used for filtering of notified events.
+Only events originating from specified server will be notified to client.
+If server id is not specified, all events (that satisfy subscription) are
+notified to client.</p>
+</li>
+<li><p>persisted</p>
+<p>Flag indicating when should server send event notifications to client.
+If this property is <code class="docutils literal notranslate"><span class="pre">true</span></code>, server should send notifications after
+events are persisted. If this property is <code class="docutils literal notranslate"><span class="pre">false</span></code>, server should send
+notifications immediately after event registration.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><cite>init_res</cite></p>
+<p>Initial message sent by server. This message is sent after receiving
+<cite>init_req</cite> message and informs client of connection establishment success.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>success</cite></p>
+<p>Connection establishment success.</p>
+</li>
+<li><p><cite>status</cite></p>
+<p>Parameter available in case of success <code class="docutils literal notranslate"><span class="pre">true</span></code>. Represents current server
+status.</p>
+</li>
+<li><p><cite>error</cite></p>
+<p>Parameter available in case of success <code class="docutils literal notranslate"><span class="pre">false</span></code>. Represents additional
+human readable error message.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>status</cite></p>
+<p>Message sent by server on each server’s status change.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>status</cite></p>
+<p>Server status (<cite>STANDBY</cite> or <cite>OPERATIONAL</cite>).</p>
+</li>
+</ul>
+</li>
+<li><p><cite>events</cite></p>
+<p>Message sent by server. This message is used to notify client with newly
+created events.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>events</cite></p>
+<p>List of events.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>register_req</cite></p>
+<p>Message sent by client. This message enables client to submit new registration
+request. Single message can contain multiple register events.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>register_id</cite></p>
+<p>Request identifier set by client. Server will include same identifier in
+associated response message.</p>
+</li>
+<li><p><cite>register_events</cite></p>
+<p>List of register events.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>register_res</cite></p>
+<p>Message sent by server as response to <cite>register_req</cite>.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>register_id</cite></p>
+<p>Identifier matching one included in associated request message.</p>
+</li>
+<li><p><cite>success</cite></p>
+<p>Flag indicating registration success.</p>
+</li>
+<li><p><cite>events</cite></p>
+<p>List of associated events available only in case of success <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>query_req</cite></p>
+<p>Query previously created events. Each query request contains <cite>query_type</cite>
+identifying query type.</p>
+<p>Query types:</p>
+<ul>
+<li><p><cite>latest</cite></p>
+<p>Query latest events for each specified event type.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>query_id</cite></p>
+<p>Request identifier set by client. Server will include same identifier in
+associated response message.</p>
+</li>
+<li><p><cite>event_types</cite></p>
+<p>Optional list of event type queries. If not specified, <code class="docutils literal notranslate"><span class="pre">*</span></code> is assumed.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>timeseries</cite></p>
+<p>Query timeseries events.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>query_id</cite></p>
+<p>Request identifier set by client. Server will include same identifier in
+associated response message.</p>
+</li>
+<li><p><cite>event_types</cite></p>
+<p>Optional list of event type queries. If not specified, <code class="docutils literal notranslate"><span class="pre">*</span></code> is assumed.</p>
+</li>
+<li><p><cite>t_from</cite></p>
+<p>Optional timestamp used as timestamp filter. If specified, queried events
+must have timestamp greater or equal than <cite>t_from</cite>.</p>
+</li>
+<li><p><cite>t_to</cite></p>
+<p>Optional timestamp used as timestamp filter. If specified, queried events
+must have timestamp less or equal than <cite>t_to</cite>.</p>
+</li>
+<li><p><cite>source_t_from</cite></p>
+<p>Optional timestamp used as source timestamp filter. If specified, queried
+events must have source timestamp greater or equal than <cite>t_from</cite>.</p>
+</li>
+<li><p><cite>source_t_to</cite></p>
+<p>Optional timestamp used as source timestamp filter. If specified, queried
+events must have source timestamp less or equal than <cite>t_to</cite>.</p>
+</li>
+<li><p><cite>order</cite></p>
+<p>Indication selecting descending or ascending order.</p>
+</li>
+<li><p><cite>order_by</cite></p>
+<p>Indication selecting timestamp based or source timestamp based timeseries.</p>
+</li>
+<li><p><cite>max_results</cite></p>
+<p>Optional limit to maximum number of events included in query result. In
+addition to client provided <cite>max_result</cite>, server can apply additional
+limitations to number of events.</p>
+</li>
+<li><p><cite>last_event_id</cite></p>
+<p>Optional event identifier defining “starting event” for query result.
+This event is not included in query result.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>server</cite></p>
+<p>Query all events registered by specified server.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>query_id</cite></p>
+<p>Request identifier set by client. Server will include same identifier in
+associated response message.</p>
+</li>
+<li><p><cite>server_id</cite></p>
+<p>Server identifier used as filter for event in query result.</p>
+</li>
+<li><p><cite>persisted</cite></p>
+<p>Flag indicating queried event status. If this flag is <code class="docutils literal notranslate"><span class="pre">true</span></code>, only
+persisted events are reported in query result.</p>
+</li>
+<li><p><cite>max_results</cite></p>
+<p>Optional limit to maximum number of events included in query result. In
+addition to client provided <cite>max_result</cite>, server can apply additional
+limitations to number of events.</p>
+</li>
+<li><p><cite>last_event_id</cite></p>
+<p>Optional event identifier defining “starting event” for query result.
+This event is not included in query result.</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><cite>query_res</cite></p>
+<p>Query result.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>query_id</cite></p>
+<p>Identifier matching one included in associated request message.</p>
+</li>
+<li><p><cite>events</cite></p>
+<p>List of events.</p>
+</li>
+<li><p><cite>more_follows</cite></p>
+<p>Flag indicating if more events satisfying query are available. This
+events can be obtained by repeating sending previous query request with
+addition of <cite>last_event_id</cite> set to last reported event identifier.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>ping_req</cite></p>
+<p>Can be sent by both server and client. Once server or client received this
+message, it should immediately send <cite>ping_res</cite> message.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>ping_id</cite></p>
+<p>Request identifier set by client. Server will include same identifier in
+associated response message.</p>
+</li>
+</ul>
+</li>
+<li><p><cite>ping_res</cite></p>
+<p>Can be sent by both server and client. Represents response to <cite>ping_req</cite>
+message`.</p>
+<p>Properties:</p>
+<ul>
+<li><p><cite>ping_id</cite></p>
+<p>Identifier matching one included in associated request message.</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="communication">
+<h2>Communication<a class="headerlink" href="#communication" title="Link to this heading">¶</a></h2>
+<p>Mariner communication closely mimics communication specified by Eventer
+communication protocol. For more information, see
+<a class="reference external" href="https://hat-event.hat-open.com/eventer.html">https://hat-event.hat-open.com/eventer.html</a>.</p>
+<p>Notable differences to Eventer communications are:</p>
+<ul class="simple">
+<li><p>Status acknowledgment message is not available.</p></li>
+<li><p>Request/response messages (except for <cite>init_req</cite>/<cite>init_res</cite>) include
+request identifier. This arbitrary number is set by client in request message
+and repeated in associated response message sent by server.</p></li>
+<li><p><cite>ping_req</cite>/<cite>ping_res</cite> messages are available.</p></li>
+</ul>
+</section>
+<section id="json-schema-definitions">
+<h2>JSON Schema definitions<a class="headerlink" href="#json-schema-definitions" title="Link to this heading">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">$schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://json-schema.org/draft/2020-12/schema&quot;</span>
+<span class="nt">$id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml&quot;</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mariner communication messages</span>
+<span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/init_req&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/init_res&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/status&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/events&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/register_req&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/register_res&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/query_req&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/query_res&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/ping_req&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/messages/ping_res&quot;</span>
+<span class="nt">$defs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">messages</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">init_req</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">client_name</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">client_token</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subscriptions</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server_id</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persisted</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init_req</span>
+<span class="w">                </span><span class="nt">client_name</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">client_token</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                </span><span class="nt">subscriptions</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                    </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_type&quot;</span>
+<span class="w">                </span><span class="nt">server_id</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                </span><span class="nt">persisted</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">        </span><span class="nt">init_res</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init_res</span>
+<span class="w">                    </span><span class="nt">success</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/status&quot;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">error</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init_res</span>
+<span class="w">                    </span><span class="nt">success</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">                    </span><span class="nt">error</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">status</span>
+<span class="w">                </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/status&quot;</span>
+<span class="w">        </span><span class="nt">events</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">events</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">events</span>
+<span class="w">                </span><span class="nt">events</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                    </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event&quot;</span>
+<span class="w">        </span><span class="nt">register_req</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_id</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_events</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_req</span>
+<span class="w">                </span><span class="nt">register_id</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                </span><span class="nt">register_events</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                    </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/register_event&quot;</span>
+<span class="w">        </span><span class="nt">register_res</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">events</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_res</span>
+<span class="w">                    </span><span class="nt">register_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">success</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">                    </span><span class="nt">events</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                        </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                            </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event&quot;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">success</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_res</span>
+<span class="w">                    </span><span class="nt">register_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">success</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">query_req</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_type</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_req</span>
+<span class="w">                    </span><span class="nt">query_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">query_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">latest</span>
+<span class="w">                    </span><span class="nt">event_types</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                        </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                            </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_type&quot;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">order</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">order_by</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_req</span>
+<span class="w">                    </span><span class="nt">query_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">query_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timeseries</span>
+<span class="w">                    </span><span class="nt">event_types</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                        </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                            </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_type&quot;</span>
+<span class="w">                    </span><span class="nt">t_from</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">                    </span><span class="nt">t_to</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">                    </span><span class="nt">source_t_from</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">                    </span><span class="nt">source_t_to</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">                    </span><span class="nt">order</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/order&quot;</span>
+<span class="w">                    </span><span class="nt">order_by</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/order_by&quot;</span>
+<span class="w">                    </span><span class="nt">max_results</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">last_event_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_id&quot;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">                </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_type</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server_id</span>
+<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">persisted</span>
+<span class="w">                </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_req</span>
+<span class="w">                    </span><span class="nt">query_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">query_type</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server</span>
+<span class="w">                    </span><span class="nt">server_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">persisted</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">                    </span><span class="nt">max_results</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                    </span><span class="nt">last_event_id</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_id&quot;</span>
+<span class="w">        </span><span class="nt">query_res</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_id</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">events</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">more_follows</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">query_res</span>
+<span class="w">                </span><span class="nt">query_id</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">                </span><span class="nt">events</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">                    </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">                        </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event&quot;</span>
+<span class="w">                </span><span class="nt">more_follows</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">        </span><span class="nt">ping_req</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ping_id</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ping_req</span>
+<span class="w">                </span><span class="nt">ping_id</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">        </span><span class="nt">ping_res</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">msg_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ping_id</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">msg_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ping_res</span>
+<span class="w">                </span><span class="nt">ping_id</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="nt">status</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">STANDBY</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OPERATIONAL</span>
+<span class="w">    </span><span class="nt">timestamp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">s</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">            </span><span class="nt">us</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="nt">event_id</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">server</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">instance</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">server</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">            </span><span class="nt">session</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">            </span><span class="nt">instance</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="nt">order</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DESCENDING</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ASCENDING</span>
+<span class="w">    </span><span class="nt">order_by</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TIMESTAMP</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SOURCE_TIMESTAMP</span>
+<span class="w">    </span><span class="nt">event_type</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">        </span><span class="nt">items</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">    </span><span class="nt">timestamp</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">s</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">us</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">s</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">            </span><span class="nt">us</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
+<span class="w">    </span><span class="nt">payload</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">payload_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">binary</span>
+<span class="w">                </span><span class="nt">data_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">                </span><span class="nt">data</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">            </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload_type</span>
+<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data</span>
+<span class="w">            </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">payload_type</span><span class="p">:</span>
+<span class="w">                    </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="w">    </span><span class="nt">event</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">timestamp</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_timestamp</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">id</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_id&quot;</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_type&quot;</span>
+<span class="w">            </span><span class="nt">timestamp</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">            </span><span class="nt">source_timestamp</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">            </span><span class="nt">payload</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/payload&quot;</span>
+<span class="w">    </span><span class="nt">register_event</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_timestamp</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">payload</span>
+<span class="w">        </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/event_type&quot;</span>
+<span class="w">            </span><span class="nt">source_timestamp</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/timestamp&quot;</span>
+<span class="w">            </span><span class="nt">payload</span><span class="p">:</span>
+<span class="w">                </span><span class="nt">oneOf</span><span class="p">:</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;null&quot;</span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">$ref</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hat-mariner://mariner.yaml#/$defs/payload&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="client.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Mariner client</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Home</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2020-2025, Hat Open AUTHORS
+            </div>
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Mariner</a><ul>
+<li><a class="reference internal" href="#transport">Transport</a></li>
+<li><a class="reference internal" href="#messages">Messages</a></li>
+<li><a class="reference internal" href="#communication">Communication</a></li>
+<li><a class="reference internal" href="#json-schema-definitions">JSON Schema definitions</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
