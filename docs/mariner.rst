@@ -152,7 +152,7 @@ Supported messages (identified by message type) are:
 
   * `register_events`
 
-    List of register events.
+    List of new events types the client wants to register for.
 
 * `register_res`
 
@@ -170,7 +170,7 @@ Supported messages (identified by message type) are:
 
   * `events`
 
-    List of associated events available only in case of success ``true``.
+    List of associated event types available only in case of success ``true``.
 
 * `query_req`
 
