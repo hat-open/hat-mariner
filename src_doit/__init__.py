@@ -5,7 +5,6 @@ from hat.doit.docs import (build_sphinx,
                            build_pdoc)
 from hat.doit.py import (get_task_build_wheel,
                          get_task_run_pytest,
-                         get_task_create_pip_requirements,
                          run_flake8)
 
 __all__ = ['task_clean_all',
@@ -13,8 +12,7 @@ __all__ = ['task_clean_all',
            'task_check',
            'task_test',
            'task_docs',
-           'task_json_schema_repo',
-           'task_pip_requirements']
+           'task_json_schema_repo']
 
 
 build_dir = Path('build')
@@ -73,8 +71,3 @@ def task_json_schema_repo():
     """Generate JSON Schema Repository"""
     return common.get_task_json_schema_repo(schemas_json_dir.rglob('*.yaml'),
                                             json_schema_repo_path)
-
-
-def task_pip_requirements():
-    """Create pip requirements"""
-    return get_task_create_pip_requirements()
