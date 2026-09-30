@@ -4,7 +4,7 @@ import typing
 
 from hat import aio
 from hat import json
-from hat.drivers import tcp
+from hat.drivers import net
 
 from hat.mariner.transport import common
 from hat.mariner.transport import encoder
@@ -13,30 +13,30 @@ from hat.mariner.transport import encoder
 ConnectionCb: typing.TypeAlias = aio.AsyncCallable[['Connection'], None]
 
 
-async def connect(addr: tcp.Address,
+async def connect(addr: net.StreamAddress,
                   **kwargs
                   ) -> 'Connection':
-    conn = await tcp.connect(addr, **kwargs)
+    conn = await net.connect(addr, **kwargs)
 
     return Connection(conn)
 
 
 async def listen(connection_cb: ConnectionCb,
-                 addr: tcp.Address,
+                 addr: net.StreamAddress,
                  **kwargs
-                 ) -> tcp.Server:
+                 ) -> net.Server:
 
     async def on_connection(conn):
         await aio.call(connection_cb, Connection(conn))
 
-    srv = await tcp.listen(on_connection, addr, **kwargs)
+    srv = await net.listen(on_connection, addr, **kwargs)
 
     return srv
 
 
 class Connection(aio.Resource):
 
-    def __init__(self, conn: tcp.Connection):
+    def __init__(self, conn: net.Connection):
         self._conn = conn
 
     @property
@@ -44,7 +44,7 @@ class Connection(aio.Resource):
         return self._conn.async_group
 
     @property
-    def info(self) -> tcp.ConnectionInfo:
+    def info(self) -> net.ConnectionInfo:
         return self._conn.info
 
     async def drain(self):

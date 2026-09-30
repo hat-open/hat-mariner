@@ -2,7 +2,7 @@ import logging
 
 from hat import aio
 from hat import json
-from hat.drivers import tcp
+from hat.drivers import net
 import hat.event.common
 import hat.event.eventer
 
@@ -23,8 +23,8 @@ async def create_server(conf: json.Data) -> 'Server':
 
     srv._srv = await transport.listen(
         connection_cb=srv._on_connection,
-        addr=tcp.Address(host=conf['mariner']['host'],
-                         port=conf['mariner']['port']),
+        addr=net.TcpAddress(host=conf['mariner']['host'],
+                            port=conf['mariner']['port']),
         bind_connections=True)
 
     return srv
@@ -103,8 +103,8 @@ async def _create_client(component_name, eventer_conf, client_confs, validator,
 
     try:
         eventer_client = await hat.event.eventer.connect(
-            addr=tcp.Address(host=eventer_conf['host'],
-                             port=eventer_conf['port']),
+            addr=net.TcpAddress(host=eventer_conf['host'],
+                                port=eventer_conf['port']),
             client_name=f'mariner/{component_name}/{init_req.client_name}',
             client_token=eventer_conf['token'],
             subscriptions=subscription.get_query_types(),

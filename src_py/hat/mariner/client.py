@@ -6,7 +6,7 @@ import logging
 import typing
 
 from hat import aio
-from hat.drivers import tcp
+from hat.drivers import net
 import hat.event.common
 
 from hat.mariner import transport
@@ -23,7 +23,7 @@ EventsCb: typing.TypeAlias = aio.AsyncCallable[
     None]
 
 
-async def connect(addr: tcp.Address,
+async def connect(addr: net.StreamAddress,
                   client_name: str,
                   *,
                   client_token: str | None = None,
