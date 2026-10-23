@@ -257,6 +257,8 @@ class _Client(aio.Resource):
             schema_ids = set(schema_ids)
 
         if not schema_ids:
+            mlog.warning('invalid register event %s: no schema ids',
+                         register_event.type)
             return False
 
         for schema_id in schema_ids:
@@ -265,13 +267,17 @@ class _Client(aio.Resource):
 
             if not isinstance(register_event.payload,
                               hat.event.common.EventPayloadJson):
+                mlog.warning('invalid register event %s: invalid payload',
+                             register_event.type)
                 return False
 
             try:
                 self._validator.validate(schema_id,
                                          register_event.payload.data)
 
-            except Exception:
+            except Exception as e:
+                mlog.warning('invalid register event %s: validation error: %s',
+                             register_event.type, e, exc_info=e)
                 return False
 
         return True
